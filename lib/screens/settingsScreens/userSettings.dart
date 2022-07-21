@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:zone/additional/colors.dart';
 import 'package:zone/screens/auth/login.dart';
 import 'package:zone/screens/auth/login1.dart';
+import 'package:zone/screens/mainPages/InDashBoard/support.dart';
 import 'package:zone/screens/mainPages/profileScreen.dart';
 import 'package:zone/screens/main_page.dart';
 import 'package:zone/screens/settingsScreens/aboutUsScreen.dart';
@@ -177,8 +178,8 @@ class _userSettingsState extends State<userSettings> {
                           const SizedBox(
                             height: 12,
                           ),
-                          settingButton("Help", Icons.help_outline, context,
-                              helpScreen()),
+                          settingButton(
+                              "Help", Icons.help_outline, context, support()),
                           const SizedBox(
                             height: 12,
                           ),

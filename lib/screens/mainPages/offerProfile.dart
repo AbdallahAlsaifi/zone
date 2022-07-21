@@ -453,6 +453,8 @@ class _offerProfileState extends State<offerProfile> {
                                   )),
                               TextButton(
                                   onPressed: () async {
+                                    navigatePop(context, widget);
+                                    _isLoading = true;
                                     newSoldOffers += 1;
                                     String contractId =
                                         await FireStoreSettings()
@@ -474,6 +476,7 @@ class _offerProfileState extends State<offerProfile> {
                                         .doc(FirebaseAuth
                                             .instance.currentUser!.uid)
                                         .update({'balance': userBalance});
+                                    _isLoading = false;
                                     navigateToWithoutBack(
                                       context,
                                       chatScreen(
@@ -485,7 +488,7 @@ class _offerProfileState extends State<offerProfile> {
                                               userData['profilePhotoUrl'],
                                           peerId: userData['uid'],
                                           peerName:
-                                              '${userData['fname']} ${userData['lname']}'),
+                                          '${userData['fname']} ${userData['lname']}'),
                                     );
                                   },
                                   child: Text(

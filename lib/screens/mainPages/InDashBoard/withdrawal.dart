@@ -19,7 +19,7 @@ class _withdrawState extends State<withdraw> {
   }
 
   var userData = {};
-  String userWallet = '0';
+  double userWallet = 0.0;
   bool isCandidateToWithdraw = false;
 
   getData() async {
@@ -30,15 +30,18 @@ class _withdrawState extends State<withdraw> {
           .get();
 
       userData = snap.data()!;
-      userWallet = userData['balance'];
-      if (int.parse(userWallet) >= 100) {
+      setState(() {
+        userWallet = userData['balance'];
+        print(userWallet);
+      });
+      if (userWallet >= 100) {
         setState(() {
           isCandidateToWithdraw = true;
         });
       }
       setState(() {});
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Loading...');
+      Fluttertoast.showToast(msg: 'Loading ...');
     }
   }
 
@@ -96,13 +99,24 @@ class _withdrawState extends State<withdraw> {
               width: 20,
             ),
             ElevatedButton(
-              onPressed: () {
-                isCandidateToWithdraw
-                    ? Fluttertoast.showToast(
-                        msg:
-                            'Your request has been submitted\nsoon you will recieve an email to complete the withdraw procedures')
-                    : Fluttertoast.showToast(
-                        msg: 'Your balance should be at least 100\$ or more');
+              onPressed: () async {
+                if (isCandidateToWithdraw) {
+                  await FirebaseFirestore.instance
+                      .collection('Withdraw')
+                      .doc(DateTime.now().toString())
+                      .collection(DateTime.now().toString())
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .set({
+                    'status': 'Pending Review',
+                    'amount': userWallet,
+                  });
+                  Fluttertoast.showToast(
+                      msg:
+                          'Your request has been submitted\nsoon you will receive an email to complete the withdraw procedures');
+                } else {
+                  Fluttertoast.showToast(
+                      msg: 'Your balance should be at least 100\$ or more');
+                }
               },
               child: Text('Request Withdraw'),
               style: ElevatedButton.styleFrom(primary: offersColor),

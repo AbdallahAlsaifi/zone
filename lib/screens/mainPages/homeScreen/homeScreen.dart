@@ -55,10 +55,10 @@ class _homeScreenState extends State<homeScreen> {
     final int documents = qSnap.docs.length;
 
     if (documents > 0) {
-      for (int i = 0; i <= 7; i++) {
+      for (int i = 0; i <= 6; i++) {
         int d = random(0, documents);
         List snap2 = qSnap.docs[d].get('categoryTags');
-        x.add(snap2.elementAt(random(0, snap2.length)).toString().trim());
+        x.add(snap2.elementAt(random(0, snap2.length)).toString());
       }
       print(x);
       setState(() {
@@ -470,13 +470,13 @@ class _homeScreenState extends State<homeScreen> {
             )
           : ListView(
               children: [
-                topViews('${y[0]}', 1),
-                topViews('${y[1]}', 2),
-                topViews('${y[2]}', 3),
-                topViews('${y[3]}', 4),
-                topViews('${y[4]}', 5),
-                topViews('${y[5]}', 6),
-                topViews('${y[6]}', 7),
+                topViews('${y[0].toString().toLowerCase()}', 1),
+                topViews('${y[1].toString().toLowerCase()}', 2),
+                topViews('${y[2].toString().toLowerCase()}', 3),
+                topViews('${y[3].toString().toLowerCase()}', 4),
+                topViews('${y[4].toString().toLowerCase()}', 5),
+                topViews('${y[5].toString().toLowerCase()}', 6),
+                topViews('${y[6].toString().toLowerCase()}', 7),
               ],
             ),
       backgroundColor: primaryColor,

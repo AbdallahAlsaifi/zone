@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:zone/additional/colors.dart';
 import 'package:zone/screens/SeeUserOffers.dart';
@@ -44,10 +45,10 @@ class _profileScreenState extends State<profileScreen> {
 
   var sss;
 
+  @override
   void initState() {
     super.initState();
     getData();
-    checkRank();
 
     // getData();
   }
@@ -59,39 +60,37 @@ class _profileScreenState extends State<profileScreen> {
   double rate = 0;
 
   getData() async {
-    try {
-      var snap = await FirebaseFirestore.instance
+    var snap = await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.uid)
           .get();
-      var portSnap = await FirebaseFirestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .get();
+    var portSnap = await FirebaseFirestore.instance
+        .collection('Portfolio')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
 
-      var snap3 = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.uid)
-          .collection('comments')
-          .get();
-
-      setState(() {
-        portLen = portSnap.docs.length;
-        userData = snap.data()!;
-        username = userData['username'];
-        rank = userData['rank'];
-        userRating = userData['rating'];
-        userId = userData['uid'];
-        skills = userData['skills'];
-        commentsLength = snap3.docs.length;
-        snap3.docs.forEach((value) {
-          var rate = value.data()!['rate'];
-          totalRate = totalRate + rate;
-        });
-        rate = totalRate / commentsLength;
-        print(rate);
+    var snap3 = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .collection('comments')
+        .get();
+    portLen = portSnap.docs.length;
+    userData = snap.data()!;
+    setState(() {
+      username = userData['username'];
+      rank = userData['rank'];
+      userRating = userData['rating'];
+      userId = userData['uid'];
+      skills = userData['skills'];
+      commentsLength = snap3.docs.length;
+      snap3.docs.forEach((value) {
+        var rate = value.data()!['rate'];
+        totalRate = totalRate + rate;
       });
-    } catch (e) {}
+      rate = totalRate / commentsLength;
+      print(rate);
+    });
+    checkRank();
   }
 
   checkRank() {
@@ -302,7 +301,7 @@ class _profileScreenState extends State<profileScreen> {
                                               lineWidth: 6.0,
                                               percent: 55 / 100,
                                               center: Text(
-                                                "0",
+                                                "${userData['soldOffers']}",
                                                 style: new TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: primaryColor,
@@ -682,14 +681,18 @@ class _profileScreenState extends State<profileScreen> {
   }
 
   oldRankPercentColor() {
+    Color x = offersColor;
     if (rank.toLowerCase() == 'zoner') {
-      return Colors.grey;
+      x = Colors.grey;
     } else if (rank.toLowerCase() == 'pro') {
-      return Colors.white;
+      x = Colors.white;
     } else if (rank.toLowerCase() == 'gold') {
-      return Colors.amber;
+      x = Colors.amber;
     } else if (rank.toLowerCase() == 'star') {
-      return offersColor;
+      x = offersColor;
+    } else if (rank.isNull) {
+      x = offersColor;
     }
+    return x;
   }
 }

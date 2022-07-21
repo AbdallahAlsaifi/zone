@@ -133,7 +133,7 @@ class _mainPageState extends State<mainPage> {
       postScreen(),
       personalOffersScreen(),
       profileScreen(
-        uid: uid,
+        uid: FirebaseAuth.instance.currentUser!.uid,
         isVisiting: false,
       )
     ];
@@ -219,14 +219,22 @@ class _mainPageState extends State<mainPage> {
                               size: 30,
                             )),
                             FittedBox(
-                              child: Text(
-                                "  ${userBalance.toString()} ",
-                                style: new TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: offersColor,
-                                    fontSize: 30.0),
-                              ),
-                            ),
+                                child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .snapshots(),
+                              builder: (BuildContext content,
+                                  AsyncSnapshot snapshot) {
+                                return Text(
+                                  "  ${snapshot.data!['balance']} ",
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: offersColor,
+                                      fontSize: 30.0),
+                                );
+                              },
+                            )),
                           ],
                         ),
                       ),
@@ -269,7 +277,8 @@ class _mainPageState extends State<mainPage> {
             dashboard(),
             leaderBoard(),
             personalOffersScreen(),
-            profileScreen(uid: uid, isVisiting: false)
+            profileScreen(
+                uid: FirebaseAuth.instance.currentUser!.uid, isVisiting: false)
           ],
         ),
         floatingActionButton: Container(

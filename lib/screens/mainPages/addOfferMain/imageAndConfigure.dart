@@ -31,9 +31,7 @@ class _imageAndConfigureScreenState extends State<imageAndConfigureScreen>
       body: Center(
           child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: [
             DetailsInformation(
                 "Choosing the right photo will reflex your Offer cover book. Also, please make sure that the image you are selecting is well showing what you offer"),

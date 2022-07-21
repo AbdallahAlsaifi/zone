@@ -127,7 +127,6 @@ class _pzcoinState extends State<pzcoin> {
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'balance': userBalance});
-      navigateTo(context, mainPage(isFromSettings: false));
     } catch (errorr) {
       if (errorr is StripeException) {
         // ScaffoldMessenger.of(context).showSnackBar(
@@ -160,7 +159,58 @@ class _pzcoinState extends State<pzcoin> {
         ),
         backgroundColor: offersColor,
         elevation: 0,
-        actions: [],
+        actions: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    navigateTo(context, const pzcoin());
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    height: 45,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(35),
+                        color: primaryColor),
+                    child: FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                              child: Icon(
+                            Icons.monetization_on,
+                            color: offersColor,
+                            size: 30,
+                          )),
+                          FittedBox(
+                              child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder:
+                                (BuildContext content, AsyncSnapshot snapshot) {
+                              return Text(
+                                "  ${snapshot.data!['balance']} ",
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: offersColor,
+                                    fontSize: 30.0),
+                              );
+                            },
+                          )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
       body: ListView.builder(
         controller: ScrollController(),

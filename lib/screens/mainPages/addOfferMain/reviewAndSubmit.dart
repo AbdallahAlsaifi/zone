@@ -89,7 +89,10 @@ class _reviewAndSubmitState extends State<reviewAndSubmit> {
         x += 1;
       });
     }
-    if (int.parse(reviewAndSubmit.newPrice.value) >= 5) {
+    if ((int.parse(reviewAndSubmit.newPrice.value.isEmpty
+            ? '0'
+            : reviewAndSubmit.newPrice.value) >=
+        5)) {
       setState(() {
         _isPriceFine = true;
         x += 1;
