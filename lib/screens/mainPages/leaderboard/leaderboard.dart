@@ -21,7 +21,10 @@ class _leaderBoardState extends State<leaderBoard> {
     return Scaffold(
       backgroundColor: primaryColor,
       body: StreamBuilder<QuerySnapshot>(
-          stream: recipes.orderBy('soldOffers', descending: true).snapshots(),
+          stream: recipes
+              .orderBy('soldOffers', descending: true)
+              .limit(100)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');

@@ -47,6 +47,7 @@ class _mainPageState extends State<mainPage> {
 
   int currentTab = 0;
   String uid = " ";
+  double userBalance = 0.0;
   var CurrentUserData = {};
 
   Future<void> updateDataFirestore(String collectionPath, String docPath,
@@ -67,6 +68,7 @@ class _mainPageState extends State<mainPage> {
 
       setState(() {
         uid = CurrentUserData['uid'];
+        userBalance = double.parse(CurrentUserData['balance']);
       });
     } catch (e) {}
   }
@@ -125,11 +127,11 @@ class _mainPageState extends State<mainPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      const homeScreen(),
-      const dashboard(),
-      const leaderBoard(),
-      const postScreen(),
-      const personalOffersScreen(),
+      homeScreen(),
+      dashboard(),
+      leaderBoard(),
+      postScreen(),
+      personalOffersScreen(),
       profileScreen(
         uid: uid,
         isVisiting: false,
@@ -206,25 +208,27 @@ class _mainPageState extends State<mainPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(35),
                           color: primaryColor),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                              child: Icon(
-                                Icons.monetization_on,
-                                color: offersColor,
-                                size: 30,
-                              )),
-                          FittedBox(
-                            child: Text(
-                              "  0.0 ",
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: offersColor,
-                                  fontSize: 30.0),
+                      child: FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                                child: Icon(
+                              Icons.monetization_on,
+                              color: offersColor,
+                              size: 30,
+                            )),
+                            FittedBox(
+                              child: Text(
+                                "  ${userBalance.toString()} ",
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: offersColor,
+                                    fontSize: 30.0),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -233,14 +237,15 @@ class _mainPageState extends State<mainPage> {
             )
           ],
           bottom: TabBar(
-            indicatorColor: primaryColor,
+            indicatorColor: offersColor,
+            indicatorWeight: 0.0001,
             tabs: [
               Tab(
                 text: 'Home',
                 icon: Icon(Icons.home),
               ),
               Tab(
-                text: 'Dashboard',
+                text: 'Dash',
                 icon: Icon(Icons.dashboard),
               ),
               Tab(

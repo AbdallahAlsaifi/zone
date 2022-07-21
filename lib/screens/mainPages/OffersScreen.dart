@@ -47,6 +47,10 @@ class _personalOffersScreenState extends State<personalOffersScreen> {
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
+        leading: BackButton(
+          color: offersColor,
+          onPressed: () => null,
+        ),
         backgroundColor: offersColor,
         flexibleSpace: SafeArea(
           child: Container(
@@ -136,59 +140,59 @@ class _personalOffersScreenState extends State<personalOffersScreen> {
                 });
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemOne,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Top Sales'),
-                          Icon(
-                            Icons.monetization_on_outlined,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemTwo,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Top Rated'),
-                          Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemThree,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('New Offers'),
-                          Icon(
-                            Icons.timer_sharp,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemFour,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Old Offers'),
-                          Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-                  ])
+                PopupMenuItem<Menu>(
+                  value: Menu.itemOne,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Top Sales'),
+                      Icon(
+                        Icons.monetization_on_outlined,
+                        color: Colors.amber,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemTwo,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Top Rated'),
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemThree,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('New Offers'),
+                      Icon(
+                        Icons.timer_sharp,
+                        color: Colors.grey,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemFour,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Old Offers'),
+                      Icon(
+                        Icons.access_time_rounded,
+                        color: Colors.grey,
+                      )
+                    ],
+                  ),
+                ),
+              ])
         ],
       ),
       body: isShowing

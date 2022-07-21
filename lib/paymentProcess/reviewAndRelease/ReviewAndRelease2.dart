@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 import 'package:zone/additional/colors.dart';
 import 'package:zone/screens/mainPages/InDashBoard/dashboard.dart';
@@ -29,6 +30,7 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
   var userData = {};
   var sellerData = {};
   var contractData = {};
+  var offerData = {};
   String startingTime = " ";
   List userActiveContracts = [];
   List sellerActiveContracts = [];
@@ -36,6 +38,7 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
   List sellerCompletedContracts = [];
   bool isLoading = false;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  double offerPrice = 0.0;
 
   Future<void> updateDataFirestore(String collectionPath, String docPath,
       Map<String, dynamic> dataNeedUpdate) {
@@ -44,6 +47,8 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
         .doc(docPath)
         .update(dataNeedUpdate);
   }
+
+  double sellerBalance = 0.0;
 
   getData() async {
     try {
@@ -62,8 +67,14 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
           .doc(contractData['sellerId'])
           .get();
       sellerData = snap3.data()!;
-
+      var snap4 = await FirebaseFirestore.instance
+          .collection('Category')
+          .doc(contractData['offerId'])
+          .get();
+      offerData = snap4.data()!;
       setState(() {
+        sellerBalance = sellerData['balance'];
+        offerPrice = double.parse(offerData['price']);
         startingTime = contractData['startingDate'];
         userActiveContracts = userData['activeContracts'];
         sellerActiveContracts = sellerData['activeContracts'];
@@ -75,7 +86,7 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
 
   double _ratingHolder = 0;
 
-  void submitRatingAndCloseContract() async {
+  Future<void> submitRatingAndCloseContract() async {
     try {
       setState(() {
         isLoading = true;
@@ -136,7 +147,6 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
         'activeContracts': sellerActiveContracts,
         'completedContracts': sellerCompletedContracts,
       });
-      navigateTo(context, mainPage(isFromSettings: false));
     } catch (e) {}
   }
 
@@ -230,15 +240,23 @@ class _ReviewAndRelease2State extends State<ReviewAndRelease2> {
                   )),
             ),
             InkWell(
-              onTap: () {
+              onTap: () async {
                 if (_ratingHolder > 0) {
                   try {
                     setState(() {
                       isLoading = true;
                     });
+                    setState(() {
+                      sellerBalance += offerPrice;
+                    });
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(sellerData['uid'])
+                        .update({'balance': sellerBalance});
 
-                    submitRatingAndCloseContract();
-
+                    await submitRatingAndCloseContract();
+                    navigateTo(context, mainPage(isFromSettings: false));
+                    Fluttertoast.showToast(msg: 'Contract Closed');
                     setState(() {
                       isLoading = false;
                     });

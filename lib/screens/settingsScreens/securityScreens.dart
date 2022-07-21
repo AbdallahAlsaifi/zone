@@ -44,8 +44,8 @@ class _securityScreensState extends State<securityScreens> {
     });
 
     String result = await FireAuth()
-        .updatePassword(
-         newCred: _passwordController.text);
+        .updatePassword(newCred: _passwordController.text.trim());
+
     try {
       if (result != 'success') {
         falseSnackBar(context, result, widget);
@@ -81,19 +81,18 @@ class _securityScreensState extends State<securityScreens> {
     }
   }
   Widget build(BuildContext context) {
-    return Center(child: checker(password,
-      Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            color: secColor,
-          ),
-          title: Text(
-            'Security',
-            style: TextStyle(color: secColor),
-          ),
-          elevation: 0,
-          backgroundColor: primaryColor,
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          color: secColor,
         ),
+        title: Text(
+          'Security',
+          style: TextStyle(color: secColor),
+        ),
+        elevation: 0,
+        backgroundColor: primaryColor,
+      ),
         body: Center(
           child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -108,19 +107,18 @@ class _securityScreensState extends State<securityScreens> {
                       context,
                       passwordSettingDialog(
                         context,
-                        widget,
-                        _passwordController,
-                        "Password",
-                        "***",
-                        _isLoading,
-                      )),
-                  Divider(),
-
-                ],
-              ),),
+                    widget,
+                    _passwordController,
+                    "Password",
+                    "******",
+                    _isLoading,
+                  )),
+              Divider(),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
   Dialog passwordSettingDialog(context,
       widget,
@@ -167,14 +165,21 @@ class _securityScreensState extends State<securityScreens> {
                         style: TextStyle(color: Colors.green, fontSize: 18.0),
                       )),
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await FirebaseAuth.instance.currentUser!
+                            .updatePassword(_passwordController.text.trim());
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update(
+                                {'password': _passwordController.text.trim()});
                         updateuserPassword();
                         navigatePop(context, widget);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                super.widget));
+                                    super.widget));
                       },
                       child: Text(
                         'Change',

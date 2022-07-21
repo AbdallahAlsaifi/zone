@@ -116,13 +116,14 @@ class _MainOfferCard extends State<MainOfferCard> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    getData();
     super.initState();
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
+    final x = widget.snap['offerId'];
+    final y = widget.snap['uid'];
     return Stack(
       children: [
         GestureDetector(
@@ -130,8 +131,8 @@ class _MainOfferCard extends State<MainOfferCard> {
             navigateTo(
                 context,
                 offerProfile(
-                  uid: widget.snap['offerId'],
-                  ownerUid: widget.snap['uid'],
+                  uid: x,
+                  ownerUid: y,
                 ));
           },
           child: Container(
@@ -141,51 +142,51 @@ class _MainOfferCard extends State<MainOfferCard> {
                 children: [
                   widget.snap['PhotoUrl'] != null
                       ? Container(
-                          child: ClipRect(
-                          child: Container(
-                            height: 150,
-                            width: 100,
-                            child: CachedNetworkImage(
-                              imageUrl: widget.snap['PhotoUrl'],
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey.shade300,
-                                height: 150,
-                                width: 100,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.image),
-                                      Text('image')
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                          ),
-                        ))
-                      : Container(
-                          color: Colors.grey.shade300,
+                      child: ClipRect(
+                        child: Container(
                           height: 150,
                           width: 100,
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Icon(Icons.image), Text('image')],
+                          child: CachedNetworkImage(
+                            imageUrl: widget.snap['PhotoUrl'],
+                            imageBuilder: (context, imageProvider) =>
+                                Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey.shade300,
+                              height: 150,
+                              width: 100,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.image),
+                                    Text('image')
+                                  ],
+                                ),
+                              ),
                             ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
-                        )
+                        ),
+                      ))
+                      : Container(
+                    color: Colors.grey.shade300,
+                    height: 150,
+                    width: 100,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Icon(Icons.image), Text('image')],
+                      ),
+                    ),
+                  )
                 ],
               ),
               Container(
@@ -255,9 +256,9 @@ class _MainOfferCard extends State<MainOfferCard> {
               ),
               widget.isLocal
                   ? InkWell(
-                      onTap: () {},
-                      child: Container(),
-                    )
+                onTap: () {},
+                child: Container(),
+              )
                   : Container(),
               Container(
                 height: 10,
@@ -271,55 +272,55 @@ class _MainOfferCard extends State<MainOfferCard> {
             Container(
               child: !isFavorite
                   ? InkWell(
-                      onTap: () {
-                        try {
-                          print('presses');
-                          favOffers!.add(widget.snap['offerId']);
-                          FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .update({'favoriteOffers': favOffers!});
-                          Fluttertoast.showToast(msg: 'Added to favorites');
-                          setState(() {
-                            isFavorite = true;
-                          });
-                        } catch (e) {
-                          Fluttertoast.showToast(msg: 'Please try again later');
-                        }
-                      },
-                      child: Container(
-                        width: 30,
-                        child: Icon(
-                          CupertinoIcons.heart,
-                          color: Colors.red,
-                        ),
-                      ),
-                    )
+                onTap: () {
+                  try {
+                    print('presses');
+                    favOffers!.add(widget.snap['offerId']);
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({'favoriteOffers': favOffers!});
+                    Fluttertoast.showToast(msg: 'Added to favorites');
+                    setState(() {
+                      isFavorite = true;
+                    });
+                  } catch (e) {
+                    Fluttertoast.showToast(msg: 'Please try again later');
+                  }
+                },
+                child: Container(
+                  width: 30,
+                  child: Icon(
+                    CupertinoIcons.heart,
+                    color: Colors.red,
+                  ),
+                ),
+              )
                   : InkWell(
-                      onTap: () {
-                        try {
-                          print('presses');
-                          favOffers!.remove(widget.snap['offerId']);
-                          FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .update({'favoriteOffers': favOffers!});
-                          Fluttertoast.showToast(msg: 'Removed from favorites');
-                          setState(() {
-                            isFavorite = false;
-                          });
-                        } catch (e) {
-                          Fluttertoast.showToast(msg: 'Please try again later');
-                        }
-                      },
-                      child: Container(
-                        width: 30,
-                        child: Icon(
-                          CupertinoIcons.heart_fill,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
+                onTap: () {
+                  try {
+                    print('presses');
+                    favOffers!.remove(widget.snap['offerId']);
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .update({'favoriteOffers': favOffers!});
+                    Fluttertoast.showToast(msg: 'Removed from favorites');
+                    setState(() {
+                      isFavorite = false;
+                    });
+                  } catch (e) {
+                    Fluttertoast.showToast(msg: 'Please try again later');
+                  }
+                },
+                child: Container(
+                  width: 30,
+                  child: Icon(
+                    CupertinoIcons.heart_fill,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

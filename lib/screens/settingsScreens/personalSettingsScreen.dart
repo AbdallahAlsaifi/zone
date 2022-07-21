@@ -152,25 +152,13 @@ class _personalSettingsScreenState extends State<personalSettingsScreen> {
                       email,
                       _isLoading,
                     )),
-                Divider(),
-                settingButton2(
-                    "Phone Number:",
-                    phoneNumber,
-                    context,
-                    phoneNumberDialog(context, widget, _phoneNumber,
-                        "Phone Number", phoneNumber, _isLoading)),
-                Divider(),
-                settingButton2(
-                    "Security Word:",
-                    securityWord,
-                    context,
-                    securityQuestionDialog(
-                        context,
-                        widget,
-                        _securityWordController,
-                        "Security Word",
-                        securityWord,
-                        _isLoading)),
+                // Divider(),
+                // settingButton2(
+                //     "Phone Number:",
+                //     phoneNumber,
+                //     context,
+                //     phoneNumberDialog(context, widget, _phoneNumber,
+                //         "Phone Number", phoneNumber, _isLoading)),
               ],
             )),
       ),
@@ -467,7 +455,12 @@ class _personalSettingsScreenState extends State<personalSettingsScreen> {
                         style: TextStyle(color: Colors.green, fontSize: 18.0),
                       )),
                   TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({'phoneNumber': phoneNumber});
+
                         navigatePop(context, widget);
                         Navigator.pushReplacement(
                             context,

@@ -43,9 +43,10 @@ class _offerCommentsState extends State<offerComments> {
             }
 
             return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
               controller: ScrollController(),
               reverse: false,
-              itemCount: snapshot.data!.docs.length,
+              shrinkWrap: true,
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.all(4),

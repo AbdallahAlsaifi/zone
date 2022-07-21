@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:zone/Services/authProviding.dart';
 import 'package:zone/additional/colors.dart';
 import 'package:zone/screens/auth/fire_auth.dart';
+import 'package:zone/screens/auth/resitPassword.dart';
 import 'package:zone/screens/auth/signup.dart';
 import 'package:zone/screens/auth/signup1.dart';
 import 'package:zone/widgets/AdditionalWidgets.dart';
@@ -190,13 +191,17 @@ class _login1State extends State<login1> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Text(
-                                  'Forgot password?',
-                                  style: TextStyle(
-                                      color: offersColor,
-                                      fontFamily: 'OpenSans',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13),
+                                GestureDetector(
+                                  onTap: () =>
+                                      navigateTo(context, resitPassword()),
+                                  child: const Text(
+                                    'Forgot password?',
+                                    style: TextStyle(
+                                        color: offersColor,
+                                        fontFamily: 'OpenSans',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13),
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 20,

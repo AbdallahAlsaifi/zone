@@ -254,7 +254,7 @@ class chatScreenState extends State<chatScreen> {
                             return AlertDialog(
                               title: Text(""),
                               content: Text(
-                                "Are you sure you want to Request the Money?\n\nPlease contact\nsupport@appers.org\n\n**if the client refused to release the money",
+                                "Are you sure you want to Request the Money?\n\nPlease contact\nsupport@appers.org\n\n**Only if the client refused to release the money",
                               ),
                               actions: [
                                 TextButton(
@@ -519,15 +519,17 @@ class chatScreenState extends State<chatScreen> {
                   ),
                 ),
                 onPressed: () {
-                  //image full view
-                },
+                  //TODO:image full view
+                          },
               ),
               margin: EdgeInsets.only(
                   bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                   right: 10.0),
             )
                 : Container(
-              child: Image.network(
+                        width: 200,
+                        height: 200,
+                        child: Image.network(
                           chatMsg.content,
                           width: 100,
                           height: 100,
@@ -582,15 +584,20 @@ class chatScreenState extends State<chatScreen> {
                         ),
                   chatMsg.type == TypeMessage.TEXT
                       ? Container(
-                          child: Text(
-                            chatMsg.content,
-                            style: TextStyle(color: primaryColor),
-                          ),
+                          child: Text(chatMsg.content,
+                              style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w600)),
                           padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          width: 200.0,
                           decoration: BoxDecoration(
                               color: offersColor,
-                              borderRadius: BorderRadius.circular(14.0)),
-                          margin: EdgeInsets.only(left: 10.0),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          margin: EdgeInsets.only(
+                              bottom: isLastMessageLeft(index) ? 20.0 : 10.0,
+                              right: 10.0,
+                              left: 10.0),
                         )
                       : chatMsg.type == TypeMessage.IMAGE
                           ? Container(
@@ -666,8 +673,10 @@ class chatScreenState extends State<chatScreen> {
               isLastMessageLeft(index)
                   ? Container(
                       child: Text(
-                        chatMsg.timeSent.split(".")[0],
-                        style: TextStyle(color: Colors.grey.shade200),
+                        chatMsg.timeSent.split(".")[0].split(':')[0] +
+                            ":" +
+                            chatMsg.timeSent.split(".")[0].split(':')[1],
+                        style: TextStyle(color: Colors.grey.shade300),
                       ),
                     )
                   : SizedBox.shrink()

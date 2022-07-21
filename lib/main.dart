@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zone/Appers/appersHome.dart';
 import 'package:zone/Services/authProviding.dart';
@@ -34,6 +34,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Stripe.publishableKey =
+      'pk_test_51LCR7AKoEwOhE0oQLG2AhlpFcEnBEYcyThz37eoiaOP5C2lnwCS9Fm6OjuhhFZ768LSosBR6AWWaKlqSnmSUOZog00weaG3mso';
+  await Stripe.instance.applySettings();
 
   await sharedprefs.init();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])

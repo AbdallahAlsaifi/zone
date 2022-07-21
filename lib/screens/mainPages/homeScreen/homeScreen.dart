@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,6 +38,34 @@ class _homeScreenState extends State<homeScreen> {
   bool isShowing = false;
   String searchKey = '';
   int searchChoice = 0;
+  bool isThereAnOffers = true;
+  int numberOfTags = 7;
+  List y = [];
+  List z = [];
+
+  int random(min, max) {
+    return min + Random().nextInt(max - min);
+  }
+
+  void randomTags() async {
+    List x = [];
+
+    final QuerySnapshot qSnap =
+        await FirebaseFirestore.instance.collection('Category').get();
+    final int documents = qSnap.docs.length;
+
+    if (documents > 0) {
+      for (int i = 0; i <= 7; i++) {
+        int d = random(0, documents);
+        List snap2 = qSnap.docs[d].get('categoryTags');
+        x.add(snap2.elementAt(random(0, snap2.length)).toString().trim());
+      }
+      print(x);
+      setState(() {
+        y = x;
+      });
+    }
+  }
 
   @override
   Widget topViews(tag, duration) {
@@ -100,22 +129,6 @@ class _homeScreenState extends State<homeScreen> {
                         autoPlay: true,
                         autoPlayAnimationDuration: Duration(seconds: duration)),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'More',
-                          style: TextStyle(color: offersColor),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_outlined,
-                          color: offersColor,
-                        )
-                      ],
-                    ),
-                  ),
                   Divider(
                     thickness: 2,
                     height: 1,
@@ -133,9 +146,19 @@ class _homeScreenState extends State<homeScreen> {
 
   String _selectedMenu = '';
 
+  @override
+  void initState() {
+    randomTags();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: offersColor,
+          onPressed: () => null,
+        ),
         backgroundColor: offersColor,
         flexibleSpace: SafeArea(
           child: Container(
@@ -225,59 +248,59 @@ class _homeScreenState extends State<homeScreen> {
                 });
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemOne,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Top Sales'),
-                          Icon(
-                            Icons.monetization_on_outlined,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemTwo,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Top Rated'),
-                          Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemThree,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('New Offers'),
-                          Icon(
-                            Icons.timer_sharp,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<Menu>(
-                      value: Menu.itemFour,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Old Offers'),
-                          Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-                  ])
+                PopupMenuItem<Menu>(
+                  value: Menu.itemOne,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Top Sales'),
+                      Icon(
+                        Icons.monetization_on_outlined,
+                        color: Colors.amber,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemTwo,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Top Rated'),
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemThree,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('New Offers'),
+                      Icon(
+                        Icons.timer_sharp,
+                        color: Colors.grey,
+                      )
+                    ],
+                  ),
+                ),
+                PopupMenuItem<Menu>(
+                  value: Menu.itemFour,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Old Offers'),
+                      Icon(
+                        Icons.access_time_rounded,
+                        color: Colors.grey,
+                      )
+                    ],
+                  ),
+                ),
+              ])
         ],
       ),
       body: isShowing
@@ -447,10 +470,13 @@ class _homeScreenState extends State<homeScreen> {
             )
           : ListView(
               children: [
-                topViews('thesis', 3),
-                topViews('thesis', 5),
-                topViews('thesis', 7),
-                topViews('thesis', 9),
+                topViews('${y[0]}', 1),
+                topViews('${y[1]}', 2),
+                topViews('${y[2]}', 3),
+                topViews('${y[3]}', 4),
+                topViews('${y[4]}', 5),
+                topViews('${y[5]}', 6),
+                topViews('${y[6]}', 7),
               ],
             ),
       backgroundColor: primaryColor,

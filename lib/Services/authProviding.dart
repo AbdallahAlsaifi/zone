@@ -81,16 +81,10 @@ class AuthProvider extends ChangeNotifier {
             "rank": "Zoner",
             "rating": "0",
             "ratingCounter": "0",
-            "skills": [
-              "no skill",
-              "no skill",
-              "no skill",
-              "no skill",
-              "no skill"
-            ],
+            "skills": [],
             "activeContracts": [],
             "completedContracts": [],
-            "soldOffers": "0",
+            "soldOffers": 0,
             "username": firebaseUser.displayName!.toLowerCase() +
                 RandomStr.replaceAll(" ", ""),
             "email": googleSignIn.currentUser!.email.toString(),

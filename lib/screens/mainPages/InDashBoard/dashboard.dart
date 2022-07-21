@@ -14,6 +14,7 @@ import 'package:zone/screens/mainPages/InDashBoard/favorites/favorites.dart';
 import 'package:zone/screens/mainPages/InDashBoard/myOffers.dart';
 import 'package:zone/screens/mainPages/InDashBoard/support.dart';
 import 'package:zone/screens/mainPages/InDashBoard/withdrawal.dart';
+import 'package:zone/screens/settingsScreens/userSettings.dart';
 import '../../../widgets/AdditionalWidgets.dart';
 
 class dashboard extends StatefulWidget {
@@ -55,10 +56,12 @@ class _dashboardState extends State<dashboard> {
             size: 50,
           )),
       dashBoardContainers(
-          'My sales',
-          withdraw(),
+          'Settings',
+          userSettings(
+            isAfterChange: false,
+          ),
           Icon(
-            Icons.receipt_long,
+            Icons.settings,
             color: primaryColor,
             size: 50,
           )),

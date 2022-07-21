@@ -40,12 +40,11 @@ class _mainChatsScreenState extends State<mainChatsScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    myData = snap.data()!;
-
+    myData = await snap.data()!;
     setState(() {
       activeContacts = myData['activeContracts'];
     });
-    for (int i = 0; i <= activeContacts.length; i++) {
+    for (int i = 0; i < activeContacts.length; i++) {
       var ss = {};
       var ss2 = {};
       var snap4 = await FirebaseFirestore.instance
@@ -111,105 +110,112 @@ class _mainChatsScreenState extends State<mainChatsScreen> {
     List contracts = [];
 
     return Scaffold(
-        backgroundColor: primaryColor,
-        appBar: AppBar(
-          backgroundColor: offersColor,
-          title: Text(
-            "Chats",
-            style: TextStyle(color: primaryColor),
-          ),
-          centerTitle: true,
+      backgroundColor: primaryColor,
+      appBar: AppBar(
+        backgroundColor: offersColor,
+        title: Text(
+          "Chats",
+          style: TextStyle(color: primaryColor),
         ),
-        body: SafeArea(
-          child: StreamBuilder(
+        centerTitle: true,
+      ),
+      body: ListView(
+        children: [
+          StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('users')
                   .doc(FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (!snapshot.hasData) {
-                  return Text("Loading");
+                  return Center(child: Text("Loading"));
                 }
                 var userDocument = snapshot.data;
                 List x = userDocument!['activeContracts'];
 
-                return ListView.builder(
-                  controller: ScrollController(),
-                  itemCount: x.length,
-                  itemBuilder: (context, index) {
-                    return activeContacts.isEmpty
-                        ? Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.4),
-                                child: Center(
-                                  child: Flexible(
-                                      child: Text(
-                                    "You don't have any open chats at the moment",
-                                    style: TextStyle(color: Colors.grey),
-                                  )),
-                                ),
-                              ),
-                              DetailsInformation(
-                                  'Chats will open automatically with the seller when you buy an offer')
-                            ],
-                          )
-                        : Container(
-                            margin: EdgeInsets.only(top: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade200.withOpacity(0.8)),
-                            child: ListTile(
-                              onTap: () {
-                                navigateTo(
-                                    context,
-                                    chatScreen(
-                                        contractId: activeContacts[index],
-                                        isNewContract: false,
-                                        peerAvatar: profilePictures[index],
-                                        peerId: uids[index],
-                                        peerName: firstNames[index] +
-                                            " " +
-                                            surnames[index],
-                                        userAvatar:
-                                            userDocument['profilePhotoUrl']));
-                              },
-                              contentPadding: EdgeInsets.all(8),
-                              leading: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    profilePictures[index]),
-                                backgroundColor: primaryColor,
-                                radius: MediaQuery.of(context).size.width * 0.1,
-                              ),
-                              title: Column(
-                                children: [
-                                  Wrap(
-                                    children: [
-                                      Text(
-                                        '${firstNames[index]} ${surnames[index]}',
-                                        style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.05),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              trailing: Icon(
-                                Icons.send,
-                                color: offersColor,
-                                size: MediaQuery.of(context).size.width * 0.1,
-                              ),
-                            ),
-                          );
-                  },
-                );
+                return activeContacts.isEmpty
+                    ? Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.4),
+                        child: Center(
+                          child: Flexible(
+                              child: Text(
+                            "You don't have any open chats at the moment",
+                            style: TextStyle(color: Colors.grey),
+                          )),
+                        ),
+                      )
+                    : Wrap(
+                        children: chatList(),
+                      );
               }),
-        ));
+        ],
+      ),
+    );
+  }
+
+  chatList() {
+    List<Widget> x = [];
+    for (int index = 0; index < profilePictures.length; index++) {
+      x.add(GestureDetector(
+          onTap: () {
+            navigateTo(
+                context,
+                chatScreen(
+                    contractId: activeContacts[index],
+                    isNewContract: false,
+                    peerAvatar: profilePictures[index],
+                    peerId: uids[index],
+                    peerName: firstNames[index] + " " + surnames[index],
+                    userAvatar: myData['profilePhotoUrl']));
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage:
+                          CachedNetworkImageProvider(profilePictures[index]),
+                      backgroundColor: primaryColor,
+                      radius: MediaQuery.of(context).size.width * 0.1,
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Wrap(
+                        children: [
+                          Text(
+                            '${firstNames[index]} ${surnames[index]}',
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.05),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Icon(
+                      Icons.send,
+                      color: offersColor,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )));
+    }
+    return x;
   }
 }
