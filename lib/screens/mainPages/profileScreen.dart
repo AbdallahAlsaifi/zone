@@ -75,14 +75,14 @@ class _profileScreenState extends State<profileScreen> {
           .collection('comments')
           .get();
 
-      portLen = portSnap.docs.length;
-      userData = snap.data()!;
-      username = userData['username'];
-      rank = userData['rank'];
-      userRating = userData['rating'];
-      userId = userData['uid'];
-      skills = userData['skills'];
       setState(() {
+        portLen = portSnap.docs.length;
+        userData = snap.data()!;
+        username = userData['username'];
+        rank = userData['rank'];
+        userRating = userData['rating'];
+        userId = userData['uid'];
+        skills = userData['skills'];
         commentsLength = snap3.docs.length;
         snap3.docs.forEach((value) {
           var rate = value.data()!['rate'];
@@ -293,7 +293,8 @@ class _profileScreenState extends State<profileScreen> {
                                               circularStrokeCap:
                                                   CircularStrokeCap.butt,
                                               backgroundColor:
-                                                  oldRankPercentColor(),
+                                                  oldRankPercentColor() ??
+                                                      offersColor,
                                               progressColor: rankPercentColor(),
                                               radius: 36.0,
                                               animation: true,
